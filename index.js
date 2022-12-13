@@ -1,16 +1,38 @@
 const express = require('express');
 const mongoose = require('mongoose')
 const ShortUrl = require('./models/shortUrl')
+const dotenv = require('dotenv')
+const { MongoClient, ServerApiVersion } = require('mongodb');
 
-const mongoDBConnectionURL = "mongodb://0.0.0.0:27017/urlShortener"
+dotenv.config()
 
-mongoose.connect(mongoDBConnectionURL, (err) => {
-    if(err){
-        console.log(err)
-    }else{
-        console.log("yes conneced")
-    }
-})
+console.log(process.env.PORT)
+
+// local connect
+// const mongoDBConnectionURL = "mongodb://0.0.0.0:27017/urlShortener"
+// mongoose.connect(mongoDBConnectionURL, (err) => {
+//     if(err){
+//         console.log(err)
+//     }else{
+//         console.log("yes conneced")
+//     }
+// })
+
+const mongodbConnect = process.env.MONGODB_URL
+const connectToDB = async() =>{
+    await mongoose.connect(mongodbConnect , { 
+        useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 
+    }, (err) => {
+        if(err){
+            console.log(err)
+        }else{
+            console.log("Database conneced Successfully")
+        }
+    })
+} 
+
+connectToDB()
+
 
 const app = express();
 
